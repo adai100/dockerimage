@@ -39,7 +39,7 @@ jobs:
         git config --global user.name hbyhzx
         git add .
         git commit -m "更新阿里分享链接 "
-               
+        git push
       continue-on-error: true
     - name: Check on failures
       if: steps.commit.outputs.status == 'failure'
