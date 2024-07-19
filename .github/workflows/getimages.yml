@@ -31,7 +31,8 @@ jobs:
         # fetch new ip content and update readme file
         # sudo python check_share_id.py
         rm -rf *.tar
-        sudo python docker_pull.py p3terx/aria2-pro xhofe/alist
+        sudo python docker_pull.py p3terx/aria2-pro 
+        sudo python docker_pull.py xhofe/alist
         # tar -czvf data.tar.gz plugin.video.aliyunshare/
     - name: commit
       id: commit
