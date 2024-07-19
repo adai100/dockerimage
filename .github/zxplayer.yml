@@ -1,0 +1,76 @@
+name: zxplayer
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    tags:
+    - 'v*'
+  #  branches: 
+  #    - master
+#  schedule:
+#    - cron: 0 8 * * 5
+  watch:
+    types: [started]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+        - name: Checkout
+          uses: actions/checkout@master
+        - name: Initialization environment
+          env:
+            DEBIAN_FRONTEND: noninteractive
+          run: |
+            sudo apt-get update
+            sudo apt-get -y install unzip curl wget git jq
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get update
+            sudo apt-get install -y nodejs
+            node --version
+            npm install --global yarn
+            node -v
+            git clone --depth=1 https://github.com/hjdhnx/ZyPlayer.git 
+            cd ZyPlayer
+
+            export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            yarn add electron-vite -D
+            yarn build:linux
+            ls
+            ls ./dist/
+            mkdir -p /opt/images/
+            sudo mv ./dist/*.* /opt/images/
+            
+
+            echo "tag=ZyPlayer_$(jq -r .version package.json)_for_linux_by_$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
+            echo "status=success" >> $GITHUB_OUTPUT
+            # echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
+
+        # - name: Upload ZyPlayer
+        #   uses: actions/upload-artifact@master
+        #   if: always()
+        #   with:
+        #     name: zyplayer-linux-appimage
+        #     path: /opt/images
+   
+        - name: Upload ZyPlayer to Github Release
+          uses: svenstaro/upload-release-action@v2
+          with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: /opt/images/*
+            tag:  ${{ env.tag }}
+            overwrite: true
+            file_glob: true
+        # - name: Upload ZyPlayer to release
+        #   uses: softprops/action-gh-release@master
+        #   if: steps.tag.outputs.status == 'success'
+        #   env:
+        #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   with:
+        #     tag_name: ${{ steps.tag.outputs.release_tag }}
+        #     body_path: release.txt
+        #     files: /opt/images/*

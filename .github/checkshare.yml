@@ -1,0 +1,58 @@
+name: CheckAliShare
+
+on:
+  push:
+  schedule:
+    - cron: '0 */4 * * *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install zip unzip 
+        sudo python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then sudo pip install -r requirements.txt; fi
+    - name: run script
+      run: |
+        # fetch new ip content and update readme file
+        # sudo python check_share_id.py
+        sudo python alishare.py
+        # tar -czvf data.tar.gz plugin.video.aliyunshare/
+    - name: commit
+      id: commit
+      run: |
+        git config --global user.email 2486251172@qq.com
+        git config --global user.name hbyhzx
+        git add .
+        git commit -m "更新阿里分享链接 "
+               
+      continue-on-error: true
+    - name: Check on failures
+      if: steps.commit.outputs.status == 'failure'
+      run: exit 1
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+
+    - name: Mirror the Github organization repos to Gitee.
+      uses: Yikun/hub-mirror-action@master
+      with:
+        src: github/adai100
+        dst: gitee/hbyhzx
+        dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+        dst_token: ${{ secrets.GITEE_TOKEN }}
