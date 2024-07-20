@@ -27,8 +27,8 @@ jobs:
         sudo usermod -aG docker ${USER}
         sudo docker pull xhofe/alist
         docker save -o alsit.tar  xhofe/alist:latest
-        sudo docker pull youshandefeiyang/allinone
-        docker save -o allinone.tar  oushandefeiyang/allinone:latest
+        # sudo docker pull youshandefeiyang/allinone
+        # docker save -o allinone.tar  oushandefeiyang/allinone:latest
         sudo docker pull 6053537/portainer-ce
         docker save -o portainer-ce.tar  6053537/portainer-ce:latest
     #     sudo apt-get update
