@@ -29,8 +29,8 @@ jobs:
         docker save -o alsit.tar  xhofe/alist:latest
         # sudo docker pull youshandefeiyang/allinone
         # docker save -o allinone.tar  oushandefeiyang/allinone:latest
-        sudo docker pull 6053537/portainer-ce
-        docker save -o portainer-ce.tar  6053537/portainer-ce:latest
+        # sudo docker pull 6053537/portainer-ce
+        # docker save -o portainer-ce.tar  6053537/portainer-ce:latest
     #     sudo apt-get update
     #     sudo apt-get -y install zip unzip 
     #     sudo python -m pip install --upgrade pip
