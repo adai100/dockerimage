@@ -56,12 +56,20 @@ jobs:
     - name: Check on failures
       if: steps.commit.outputs.status == 'failure'
       run: exit 1
-
-    - name: Push changes
-      uses: ad-m/github-push-action@master
+      
+    - name: Upload Firmware to Github Release
+      uses: svenstaro/upload-release-action@v2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: *.tar
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+    # - name: Push changes
+    #   uses: ad-m/github-push-action@master
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     branch: ${{ github.ref }}
 
     # - name: Mirror the Github organization repos to Gitee.
     #   uses: Yikun/hub-mirror-action@master
