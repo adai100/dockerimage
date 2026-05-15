@@ -26,7 +26,6 @@ jobs:
         sudo sh get-docker.sh
         sudo usermod -aG docker ${USER}
         sudo docker pull iptvlive/iptv-rust:latest
-
         docker save -o iptv.tar  iptvlive/iptv-rust:latest
         # sudo docker pull youshandefeiyang/allinone
         # docker save -o allinone.tar  oushandefeiyang/allinone:latest
@@ -56,7 +55,14 @@ jobs:
     - name: Check on failures
       if: steps.commit.outputs.status == 'failure'
       run: exit 1
-      
+
+    - name : Upload packages
+      uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: Padavan-packages
+        path: /
+        
     - name: Upload Firmware to Github Release
       uses: svenstaro/upload-release-action@v2
       with:
