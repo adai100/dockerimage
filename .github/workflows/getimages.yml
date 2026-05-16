@@ -26,6 +26,7 @@ jobs:
         sudo sh get-docker.sh
         sudo usermod -aG docker ${USER}
         sudo docker pull iptvlive/iptv-rust:latest
+
         docker save -o iptv.tar  iptvlive/iptv-rust:latest
         # sudo docker pull youshandefeiyang/allinone
         # docker save -o allinone.tar  oushandefeiyang/allinone:latest
@@ -56,26 +57,11 @@ jobs:
       if: steps.commit.outputs.status == 'failure'
       run: exit 1
 
-    - name : Upload packages
-      uses: actions/upload-artifact@master
-      if: always()
+    - name: Push changes
+      uses: ad-m/github-push-action@master
       with:
-        name: Padavan-packages
-        path: /
-        
-    - name: Upload Firmware to Github Release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: /*
-        tag: ${{ github.ref }}
-        overwrite: true
-        file_glob: true
-    # - name: Push changes
-    #   uses: ad-m/github-push-action@master
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     branch: ${{ github.ref }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     # - name: Mirror the Github organization repos to Gitee.
     #   uses: Yikun/hub-mirror-action@master
