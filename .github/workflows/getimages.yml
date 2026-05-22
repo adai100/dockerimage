@@ -25,8 +25,8 @@ jobs:
         curl -fsSL https://get.docker.com -o get-docker.sh
         sudo sh get-docker.sh
         sudo usermod -aG docker ${USER}
-        sudo docker pull iptvlive/iptv-rust:arm64
-        docker save -o iptvarm64v8.tar  iptvlive/iptv-rust:arm64
+        sudo docker pull --platform=linux/arm64/v8 iptvlive/iptv-rust:latest
+        docker save -o iptvarm64v8.tar  iptvlive/iptv-rust:latest
         # sudo docker pull youshandefeiyang/allinone
         # docker save -o allinone.tar  oushandefeiyang/allinone:latest
         # sudo docker pull 6053537/portainer-ce
