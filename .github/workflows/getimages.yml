@@ -49,7 +49,6 @@ jobs:
         git config --global user.email 2486251172@qq.com
         git config --global user.name hbyhzx
         git add .
-        git rm -f alist.tar xy.tar p3terx_aria2-pro.tar
         git commit -m "更新阿里分享链接 "
         git push
       continue-on-error: true
